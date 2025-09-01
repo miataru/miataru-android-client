@@ -1,0 +1,250 @@
+# Cursor Rules for miataru Android App
+
+## Project Context
+This is an open-source Android application for privacy-friendly location tracking, sharing, and device management. Built with Kotlin, Jetpack Compose, and modern Android APIs (minSdk 24, targetSdk 35 / Android 15). Developed with Android Studio.
+
+## Code Style & Standards
+- Use Kotlin and Jetpack Compose best practices
+- Follow Material 3 and Android UX guidelines
+- Maintain a privacy-first approach
+- Use English for all code comments and strings
+- Implement robust error handling and battery optimization
+- Prefer coroutines and flows; be lifecycle-aware
+- Enforce null-safety and avoid unchecked casts
+
+## Architecture Guidelines
+- Use MVVM with `ViewModel` and `StateFlow`
+- Keep composables lightweight; delegate business logic to managers/repositories
+- Use DataStore for settings persistence
+- Use Room (or serialized files) for device/entities persistence
+- Handle runtime permissions gracefully (foreground and background location)
+- Use Hilt for dependency injection
+
+## Key Components
+- `LocationTrackingManager` and `LocationTrackingService` (FusedLocationProvider + Foreground Service)
+- `SettingsRepository` (DataStore)
+- `KnownDeviceStore` and optional `DeviceGroupStore` (Room/DataStore)
+- `MiataruApiClient` (Retrofit or Ktor + Kotlinx Serialization)
+- QR scanning/generation (ML Kit or ZXing)
+- Map UI (Google Maps Compose)
+- Background tasks (WorkManager)
+
+## Development Workflow
+- Test on phones and tablets (emulator and physical devices)
+- Consider battery optimization and background execution limits
+- Maintain privacy compliance and Google Play policies
+- Use Android Studio with Gradle builds
+
+## Common Patterns
+- Use `collectAsStateWithLifecycle` to observe flows in composables
+- Implement a clear onboarding flow with runtime permission requests
+- Handle background/foreground transitions and process death
+- Manage device identifiers securely in app-private storage
+
+## Localization Guidelines
+
+### String Localization
+ALWAYS use Android string resources with proper English descriptions for translators. Reference strings via `stringResource` in Compose or `getString` in Views.
+
+#### ✅ Correct (Compose)
+```kotlin
+Text(stringResource(id = R.string.no_groups_available_create_new))
+```
+
+#### ❌ Incorrect
+```kotlin
+Text("No groups available. Create a new group to get started.")
+```
+
+### Localization Key Naming Convention
+- Use descriptive, lowercase keys with underscores
+- Follow the pattern: `context_action_description`
+- Examples:
+  - `group_empty_add_devices_message`
+  - `no_groups_available_create_new`
+  - `edit_device`
+  - `delete_group`
+
+### Comment Guidelines
+- In `strings.xml`, place an XML comment above the string to guide translators
+- Use proper English grammar and punctuation
+- Make comments self-explanatory; avoid technical jargon
+
+### Adding New Localized Strings
+1. Use `stringResource(R.string.key)` in Kotlin code
+2. Add `<string name="key">Value</string>` to `app/src/main/res/values/strings.xml`
+3. Provide translations in `res/values-de/strings.xml` and `res/values-ja/strings.xml`
+
+## File Naming Conventions
+
+### Module and Directory Structure
+```
+app/
+└── src/main/
+    ├── java/com/miataru/
+    │   ├── ui/                 # Compose UI (screens, components)
+    │   ├── location/           # Location managers & foreground service
+    │   ├── settings/           # Settings repository & models
+    │   ├── data/               # Room/DataStore, repositories, entities
+    │   ├── network/            # Miataru API client & DTOs
+    │   ├── di/                 # Hilt modules
+    │   └── util/               # Utilities
+    └── res/                    # Resources & localization
+```
+
+### File Naming
+- Composables: `FeatureScreen.kt`, `FeatureDialog.kt`, `FeatureCard.kt`
+- ViewModels: `FeatureViewModel.kt`
+- Repositories: `FeatureRepository.kt`
+- Services/Managers: `LocationTrackingService.kt`, `LocationTrackingManager.kt`
+- Data models/entities: `Device.kt`, `DeviceEntity.kt`, `LocationSample.kt`
+
+## Copyright Header Requirements
+
+### Mandatory Copyright Header
+ALWAYS add the following header at the very top of every new Kotlin file, before the `package` declaration:
+
+```kotlin
+/*
+ * Copyright (c) 2013-2025, Daniel Kirstenpfad, www.miataru.com
+ *
+ * [FileName].kt
+ * miataru
+ *
+ * Created by Daniel Kirstenpfad on [CurrentDate].
+ */
+```
+
+#### ✅ Correct Implementation
+```kotlin
+/*
+ * Copyright (c) 2013-2025, Daniel Kirstenpfad, www.miataru.com
+ *
+ * MyNewScreen.kt
+ * miataru
+ *
+ * Created by Daniel Kirstenpfad on 2025-01-25.
+ */
+
+package com.miataru.ui
+// ... rest of the file content
+```
+
+#### ❌ Incorrect Implementation
+```kotlin
+package com.miataru.ui
+// Missing copyright header
+// ... rest of the file content
+```
+
+### Header Guidelines
+- Place the header at the very top, before any `package` or `import`
+- Replace `[FileName]` with the actual filename (e.g., `MyNewScreen.kt`)
+- Replace `[CurrentDate]` with YYYY-MM-DD (e.g., 2025-01-25)
+- Keep the exact copyright text and format
+
+## Architecture Patterns
+
+### MVVM with Jetpack
+- Use `ViewModel` + `StateFlow`/`MutableStateFlow` for UI state
+- Keep business logic separate from UI composables
+- Use repositories to access network and storage layers
+
+### Dependency Injection
+- Use Hilt for DI
+- Scope dependencies appropriately (Singleton, ActivityRetained, ViewModel)
+
+### State Management
+- Expose UI state as immutable data classes and sealed events
+- Collect flows with `collectAsStateWithLifecycle`
+- Use `remember` only for UI-local ephemeral state
+
+### Permissions & Lifecycle
+- Request foreground/background location with clear rationale
+- Handle lifecycle changes (app/background/foreground) and process recreation
+
+## Testing Guidelines
+
+### Unit Tests
+- Test business logic separately from UI using JUnit and coroutines test
+- Mock dependencies with MockK (or similar)
+- Use descriptive test names that explain the scenario
+
+### UI Tests
+- Test user workflows end-to-end with Compose UI testing and Espresso (if needed)
+- Use `testTag`/semantics for reliable element selection
+- Test on different device sizes and orientations
+
+## Common Patterns
+
+### Error Handling
+```kotlin
+fun showError(
+    debugMessage: String,
+    userMessageRes: Int,
+    snackbarHost: SnackbarHostState
+) {
+    Log.e("Miataru", debugMessage)
+    // Launch in a coroutine scope
+    // snackbarHost.showSnackbar(message = context.getString(userMessageRes))
+}
+```
+
+### API Calls
+```kotlin
+suspend fun fetchAllLocations() = api.getLocations()
+```
+
+### Animation
+```kotlin
+val alpha by animateFloatAsState(targetValue = if (visible) 1f else 0f)
+```
+
+## Best Practices
+
+### Performance
+- Use `LazyColumn`/`LazyRow` for large lists
+- Avoid heavy work in composable bodies; use `LaunchedEffect`/`SideEffect`
+- Hoist state to ViewModel when appropriate
+
+### Memory Management
+- Dispose location updates when not needed
+- Cancel coroutines appropriately; prefer `viewModelScope`
+- Avoid leaks in services and long-lived scopes
+
+### Accessibility
+- Provide meaningful `contentDescription` for interactive elements
+- Use semantic colors and proper contrast
+- Test with TalkBack and large text settings
+
+### Variable Naming
+- Use camelCase for variables and functions
+- Use descriptive names that explain the purpose
+- Avoid abbreviations unless widely understood
+
+## Code Review Checklist
+
+- [ ] Copyright header is present and correctly formatted
+- [ ] All user-facing strings use Android string resources
+- [ ] Proper permission and error handling implemented
+- [ ] Foreground service and notification channel configured when tracking
+- [ ] Memory leaks prevented (cancelling updates, disposing resources)
+- [ ] Code follows established naming conventions
+- [ ] Appropriate state management and architecture boundaries used
+- [ ] Performance and battery considerations addressed
+- [ ] Accessibility features implemented
+
+## Resources
+
+- Android localization guide: `https://developer.android.com/guide/topics/resources/localization`
+- Jetpack Compose: `https://developer.android.com/jetpack/compose`
+- Material 3: `https://m3.material.io/`
+- Location (FusedLocationProvider): `https://developers.google.com/location-context/fused-location-provider`
+- WorkManager: `https://developer.android.com/topic/libraries/architecture/workmanager`
+- Hilt: `https://developer.android.com/training/dependency-injection/hilt-android`
+- Retrofit: `https://square.github.io/retrofit/`
+- Kotlin Coroutines: `https://kotlinlang.org/docs/coroutines-overview.html`
+
+---
+
+Remember: Always prioritize user experience, maintainability, and code quality. When in doubt, follow the established patterns in the existing codebase and the Android Porting Plan (`doc/AndroidPortingPlan.md`).
