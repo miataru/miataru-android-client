@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # miataru Android App
 
 miataru is a privacy-focused Android application for location tracking and secure sharing with trusted parties. The project prioritizes user privacy, battery efficiency, and a clean, modern Android experience.
@@ -114,3 +115,9 @@ See `LICENSE` for details.
 
 ---
 For detailed porting steps and status, see `doc/AndroidPortingPlan.md`.
+=======
+miataru-android-client
+======================
+
+the Miataru Android Client
+>>>>>>> master
