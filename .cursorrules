@@ -248,3 +248,5 @@ val alpha by animateFloatAsState(targetValue = if (visible) 1f else 0f)
 ---
 
 Remember: Always prioritize user experience, maintainability, and code quality. When in doubt, follow the established patterns in the existing codebase and the Android Porting Plan (`doc/AndroidPortingPlan.md`).
+
+ALWAYS Keep the Android Porting Plan (`doc/AndroidPortingPlan.md`) up to date.
