@@ -1,15 +1,17 @@
+import com.android.build.api.dsl.LibraryExtension
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 }
 
-android {
+extensions.configure<LibraryExtension> {
     namespace = "com.miataru.client"
     compileSdk = 35
 
     defaultConfig {
         minSdk = 24
-        targetSdk = 35
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -30,9 +32,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-        freeCompilerArgs += listOf("-Xjvm-default=all")
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+        freeCompilerArgs.add("-Xjvm-default=all")
     }
 }
 
