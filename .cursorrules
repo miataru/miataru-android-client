@@ -202,6 +202,21 @@ val alpha by animateFloatAsState(targetValue = if (visible) 1f else 0f)
 
 ## Best Practices
 
+### Copyright Header Requirements
+- When new .swift files are created in the project, the cursor rules should automatically insert the standard copyright header. The date field in the header should always be set to the current date.
+
+### Commit Message Language
+- The user prefers commit messages to be written in English.
+
+### Changelog on Commit
+- When you commit code or project changes, extend `miataru/CHANGELOG.md` at the top with the version from the main app’sversioning; use the value for the miataru target, not 1.0). If that version is not yet at the top of the changelog, add a new “version X.Y” section at the top and list bullet-point summaries of the changes below it. Include the CHANGELOG update in the same commit.
+
+### SpecStory on Commit
+- Before every commit that includes code or project changes, create and add a `.specstory` history file for the current chat in `miataru/.specstory/history/`.
+- Use the same naming and markdown structure as existing files in `.specstory/history` (timestamped filename, title, user prompt, agent response/summary).
+- Include that `.specstory` file in the same commit as the code changes.
+
+
 ### Performance
 - Use `LazyColumn`/`LazyRow` for large lists
 - Avoid heavy work in composable bodies; use `LaunchedEffect`/`SideEffect`

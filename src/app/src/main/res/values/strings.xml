@@ -3,4 +3,7 @@
     <string name="title_devices">Devices</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="tracking_notification_channel_name">Miataru Tracking</string>
+    <string name="tracking_notification_title">Location tracking active</string>
+    <string name="tracking_notification_message">Miataru reports your location in the background.</string>
 </resources>
