@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-
+    implementation(project(":miataru-client"))
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

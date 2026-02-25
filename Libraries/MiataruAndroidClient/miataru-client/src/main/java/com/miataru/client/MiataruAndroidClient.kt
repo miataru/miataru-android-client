@@ -21,9 +21,21 @@ class MiataruAndroidClient private constructor(
 
     suspend fun getLocationGeoJSON(deviceId: String): MiataruGetLocationGeoJSONResponse = service.getLocationGeoJSON(deviceId)
 
+    suspend fun getLocationGeoJSON(body: MiataruGetLocationRequest): MiataruGetLocationGeoJSONResponse = service.getLocationGeoJSONPost(body)
+
     suspend fun getLocationHistory(body: MiataruGetLocationHistoryRequest): MiataruGetLocationHistoryResponse = service.getLocationHistory(body)
 
     suspend fun getVisitorHistory(body: MiataruGetVisitorHistoryRequest): MiataruGetVisitorHistoryResponse = service.getVisitorHistory(body)
+
+    suspend fun deleteLocation(body: MiataruDeleteLocationRequest): MiataruDeleteLocationResponse = service.deleteLocation(body)
+
+    suspend fun setDeviceKey(body: MiataruSetDeviceKeyRequest): MiataruSetDeviceKeyResponse = service.setDeviceKey(body)
+
+    suspend fun setAllowedDeviceList(body: MiataruSetAllowedDeviceListRequest): MiataruSetAllowedDeviceListResponse = service.setAllowedDeviceList(body)
+
+    suspend fun setDeviceSlogan(body: MiataruSetDeviceSloganRequest): MiataruSetDeviceSloganResponse = service.setDeviceSlogan(body)
+
+    suspend fun getDeviceSlogan(body: MiataruGetDeviceSloganRequest): MiataruGetDeviceSloganResponse = service.getDeviceSlogan(body)
 
     class Builder {
         private var baseUrl: String = DEFAULT_BASE_URL
@@ -78,6 +90,8 @@ class MiataruAndroidClient private constructor(
     }
 
     companion object {
+        /** Miataru API version supported by this client (see Miataru.yaml). */
+        const val API_VERSION: String = "1.1.0"
         private const val DEFAULT_BASE_URL: String = "https://service.miataru.com/v1/"
     }
 }

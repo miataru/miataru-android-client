@@ -1,6 +1,6 @@
 # Miataru Android Client
 
-Android 15-ready Kotlin library for the Miataru API (`/v1`). Built with Retrofit, OkHttp, and Moshi.
+Android 15-ready Kotlin library for the **Miataru API 1.1** (`/v1`). Built with Retrofit, OkHttp, and Moshi. The API spec is defined in [Miataru.yaml](../ios-app-for-reference-during-porting/miataru/Libraries/MiataruClientSwift/Definitions/Miataru.yaml) (API version 1.1.0).
 
 ## Install (as local module)
 
@@ -51,11 +51,17 @@ val getReq = MiataruGetLocationRequest(
 ```
 
 ## Endpoints covered
-- POST `/UpdateLocation`
-- POST `/GetLocation`
-- GET `/GetLocationGeoJSON/{deviceID}`
-- POST `/GetLocationHistory`
-- POST `/GetVisitorHistory`
+- POST `/UpdateLocation` (optional DeviceKey in location when device has key set; 403 if missing/wrong)
+- POST `/GetLocation` (RequestMiataruDeviceID mandatory in API 1.1; optional RequestMiataruDeviceKey)
+- GET `/GetLocationGeoJSON/{deviceID}` (returns 401 if device has DeviceKey; use POST GetLocation for key-protected devices)
+- POST `/GetLocationGeoJSON` (same request body as GetLocation; 401 if device has DeviceKey)
+- POST `/GetLocationHistory` (RequestMiataruDeviceID mandatory; optional RequestMiataruDeviceKey)
+- POST `/GetVisitorHistory` (optional DeviceKey when target device has key set; 403 if missing/wrong)
+- POST `/DeleteLocation` (optional DeviceKey; 403 if device has key and key missing/wrong)
+- POST `/setDeviceKey`
+- POST `/setAllowedDeviceList`
+- POST `/setDeviceSlogan`
+- POST `/getDeviceSlogan`
 
 ## Proguard/R8
 Consumer rules are included to keep Moshi JSON adapters.
